@@ -24,7 +24,7 @@ invites[np.isnan(invites.close)] = 0
 #\\\\\\
 
 plt.figure()
-sns.histplot(tab.price, kde=True, bins = 8)
+sns.histplot(tab.price, kde=True, binwidth=20)
 plt.title("Price Distribution")
 plt.savefig('out/plots/registry_item_price_hist.pdf')
 
@@ -304,7 +304,7 @@ def interp(x, y, by=5):
 price_range, price_probs = interp(registry.prices, registry._item_probs)
 
 plt.figure()
-sns.histplot(registry.prices, stat="probability", bins=15)
+sns.histplot(registry.prices, stat="probability", binwidth=20)
 plt.plot(price_range, price_probs, color="orange", label="Bimodal Purchase Probability")
 plt.axvline(registry.prices.mean(), linestyle = '--', color = 'red', label = "Average Price")
 plt.xlabel('Price')
@@ -314,7 +314,7 @@ plt.legend()
 plt.savefig('out/plots/price_range_purchase_probabilities.pdf')
 
 plt.figure()
-sns.histplot(results['items_purchased_per_sim']/registry.N, kde = True)
+sns.histplot(results['items_purchased_per_sim']/registry.N, kde = True, binwidth=20)
 plt.axvspan(*summary['fulfillment_rate_ci'], alpha = .5, color = "orange")
 plt.axvline(np.mean(summary['fulfillment_rate_ci']), color = "green", linestyle = '--')
 plt.title("Item Purchase Rate Per Simulation (#bought/total items)")
@@ -388,7 +388,7 @@ reg.calculate_item_probabilities( low_high_mix= lo_hi_mx)
 filt_price_range, filt_price_probs = interp(reg.prices, reg._item_probs)
 
 plt.figure()
-sns.histplot(reg.prices, stat="probability", bins=10, kde=True)
+sns.histplot(reg.prices, stat="probability", kde=True,binwidth=20)
 plt.plot(filt_price_range, filt_price_probs, color="orange", label="Bimodal Purchase Probability")
 plt.axvline(reg.prices.mean(), linestyle = '--', color = 'red', label = "Average Price")
 plt.xlabel('Price')
