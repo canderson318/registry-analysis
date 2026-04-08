@@ -281,7 +281,7 @@ results = registry.simulate_registry_completion(
 # Get summary
 summary = registry.get_summary_stats(results)
 
-print(f"Number of expected buyers: {summary['expected_buyers']}")
+print(f"Average number of expected buyers: {np.array(summary['expected_buyers']).mean():.2f} out of {invites.shape[0]} ({np.array(summary['expected_buyers']).mean()/invites.shape[0]*100:.0f}%)")
 print(f"Completion rate: {summary['completion_rate']:.1%}")
 print(f"Average items purchased: {summary['avg_items_purchased']:.1f} / {summary['n_items']}")
 print(f"Average fulfillment rate: {summary['fulfillment_rate_mean']:.4f} ")
