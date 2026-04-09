@@ -5,7 +5,7 @@ Inspired by Oh et al. [paper](other/documents/oh2013.pdf), which models how exte
 
 ## Purpose
 
-Given a fixed guest list, determine which registry items to keep (or remove) in order to maximize the probability that every item gets purchased. The core insight is that items priced near 60% or 170% of the registry's average price attract the highest purchase probability — one cluster driven by perceived affordability, the other by perceived generosity.
+Given a fixed guest list, determine which registry items to keep (or remove) in order to maximize the probability that every item gets purchased. The core insight is that items priced near 60% or 170% of the registry's average price attract the highest purchase probability with one cluster driven by perceived affordability, the other by perceived generosity.
 
 ## Project Outline
 

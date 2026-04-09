@@ -23,7 +23,7 @@ class Registry:
     def calculate_item_probabilities(self, 
                                      locs: Tuple[float,float] = (0.6,1.7),
                                      vars: Tuple[float,float] = ( 0.15**2, 0.30**2),
-                                     low_high_mix: Tuple[float, float] = (0.55, 0.45),
+                                     low_high_mix: Tuple[float, float] = (0.5, 0.5),
                                      p_range: Tuple[float,float] = (0.40,0.70),
                                      clip: Tuple[float,float] = (0.2, 0.75)) -> np.ndarray:
         """

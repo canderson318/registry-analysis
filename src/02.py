@@ -283,9 +283,12 @@ summary = registry.get_summary_stats(results)
 
 print(f"Average number of expected buyers: {np.array(summary['expected_buyers']).mean():.2f} out of {invites.shape[0]} ({np.array(summary['expected_buyers']).mean()/invites.shape[0]*100:.0f}%)")
 print(f"Completion rate: {summary['completion_rate']:.1%}")
-print(f"Average items purchased: {summary['avg_items_purchased']:.1f} / {summary['n_items']}")
+print(f"Average number items purchased: {summary['avg_items_purchased']:.2f} (out of {summary['n_items']}, {summary['avg_items_purchased'] / summary['n_items']*100:.0f}%)")
 print(f"Average fulfillment rate: {summary['fulfillment_rate_mean']:.4f} ")
-
+# Average number of expected buyers: 47.95 out of 99 (48%)
+# Completion rate: 38.0%
+# Average items purchased: 46.8 / 50
+# Average fulfillment rate: 0.9358 
 
 def interp(x, y, by=5):
     # Handle duplicates by averaging probabilities for duplicate prices
@@ -314,7 +317,7 @@ plt.legend()
 plt.savefig('out/plots/price_range_purchase_probabilities.pdf')
 
 plt.figure()
-sns.histplot(results['items_purchased_per_sim']/registry.N, kde = True, binwidth=20)
+sns.histplot(results['items_purchased_per_sim']/registry.N, kde = True)
 plt.axvspan(*summary['fulfillment_rate_ci'], alpha = .5, color = "orange")
 plt.axvline(np.mean(summary['fulfillment_rate_ci']), color = "green", linestyle = '--')
 plt.title("Item Purchase Rate Per Simulation (#bought/total items)")
@@ -381,12 +384,19 @@ fulfillmentRate(Z[(Z>=50)])
 ## 
 
 # show price distribution with this threshold
-price_thresh = (50,np.inf)
+price_thresh = (30,np.inf)
 reg = Registry(Z[(Z>=price_thresh[0]) & (Z< price_thresh[1])])
 reg.calculate_item_probabilities( low_high_mix= lo_hi_mx)
 
-filt_price_range, filt_price_probs = interp(reg.prices, reg._item_probs)
+# Run simulation
+results = reg.simulate_registry_completion(
+    num_guests=invites.shape[0],
+    guest_p_buy=fulfillment['item_fulfillment_rate'].mean(),
+    num_simulations=500,
+    seed=124
+)
 
+filt_price_range, filt_price_probs = interp(reg.prices, reg._item_probs)
 plt.figure()
 sns.histplot(reg.prices, stat="probability", kde=True,binwidth=20)
 plt.plot(filt_price_range, filt_price_probs, color="orange", label="Bimodal Purchase Probability")
@@ -396,6 +406,13 @@ plt.ylabel('Count')
 plt.title(f'Item Price Distribution and Purchase Probability for prices [{price_thresh[0]}, {price_thresh[1]})')
 plt.legend()
 plt.savefig('out/plots/optimal_price_range_purchase_probabilities.pdf')
+
+summary = reg.get_summary_stats(results)
+
+print(f"Average number of expected buyers: {np.array(summary['expected_buyers']).mean():.2f} out of {invites.shape[0]} ({np.array(summary['expected_buyers']).mean()/invites.shape[0]*100:.0f}%)")
+print(f"Completion rate: {summary['completion_rate']:.1%}")
+print(f"Average number items purchased: {summary['avg_items_purchased']:.2f} (out of {summary['n_items']}, {summary['avg_items_purchased'] / summary['n_items']*100:.0f}%)")
+print(f"Average fulfillment rate: {summary['fulfillment_rate_mean']:.4f} ")
 
 # which items to remove?
 tab.loc[tab.price < 30][["full_title", "price"]].to_csv("out/items_lsthn_30.csv", index = False)
